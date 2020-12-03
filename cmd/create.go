@@ -49,9 +49,9 @@ to quickly create a Cobra application.`,
 			if password, err := cmd.PersistentFlags().GetString("password"); err == nil {
 				err := CreateUser(name, password)
 				if err != nil {
-					fmt.Println("Good Job")
+					fmt.Println(err)
 				} else {
-					fmt.Println("Bad Err")
+					fmt.Println("Good Succes")
 				}
 			}
 		}
