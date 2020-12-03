@@ -21,7 +21,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
-	"os"
 )
 
 type User struct {
@@ -30,7 +29,7 @@ type User struct {
 	Password	string
 }
 
-var dsn = fmt.Sprintf("%s:%s@%s/%s", os.Getenv("MYSQL_USER"),os.Getenv("MYSQL_PASSWORD"),os.Getenv("HOST"),os.Getenv("MYSQL_DATABASE"))
+var dsn = fmt.Sprintf("%s:%s@%s/%s?charset=utf8mb4&parseTime=True&loc=Local")
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
