@@ -29,6 +29,10 @@ type User struct {
 	Password	string
 }
 
+func (b *User) TableName() string {
+	return "user"
+}
+
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
