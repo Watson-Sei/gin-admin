@@ -30,7 +30,7 @@ type User struct {
 }
 
 func (b *User) TableName() string {
-	return "user"
+	return "users"
 }
 
 // createCmd represents the create command
