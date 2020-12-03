@@ -72,6 +72,7 @@ func init() {
 
 func CreateUser(username string, password string) (err error) {
 	db, err := gorm.Open("mysql", dsn)
+	fmt.Println(dsn)
 	defer db.Close()
 	if err != nil {
 		fmt.Println("Database Close")
@@ -79,6 +80,7 @@ func CreateUser(username string, password string) (err error) {
 	}
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err := db.Create(&User{Username: username, Password: string(hash)}).Error; err != nil {
+		fmt.Println("エラーです。")
 		return err
 	}
 	fmt.Println("処理が成功しました。")
