@@ -9,7 +9,7 @@ import (
 type User struct {
 	ID 			uint
 	Username	string
-	Password 	string
+	Password	string
 }
 
 func CreateUser(username string, password string) (err error) {

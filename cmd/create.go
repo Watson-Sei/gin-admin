@@ -34,11 +34,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf(os.Getenv("MYSQL_USER"),os.Getenv("MYSQL_PASSWORD"),os.Getenv("MYSQL_DATABASE"))
 		if name, err := cmd.PersistentFlags().GetString("name"); err == nil {
 			if password, err := cmd.PersistentFlags().GetString("password"); err == nil {
 				if err := models.CreateUser(name, password); err != nil {
 					fmt.Println("good job")
+					fmt.Println(os.Getenv("MYSQL_USER"),os.Getenv("MYSQL_PASSWORD"))
 				} else {
 					fmt.Println(err)
 				}
