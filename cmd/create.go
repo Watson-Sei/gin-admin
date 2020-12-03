@@ -21,6 +21,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
+	"os"
 )
 
 type User struct {
@@ -28,8 +29,6 @@ type User struct {
 	Username	string
 	Password	string
 }
-
-var dsn = fmt.Sprintf("%s:%s@%s/%s?charset=utf8mb4&parseTime=True&loc=Local")
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -44,10 +43,11 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if name, err := cmd.PersistentFlags().GetString("name"); err == nil {
 			if password, err := cmd.PersistentFlags().GetString("password"); err == nil {
-				if err := CreateUser(name, password); err != nil {
+				err := CreateUser(name, password)
+				if err != nil {
 					fmt.Println("Good Job")
 				} else {
-					fmt.Println(err)
+					fmt.Println("Bad Err")
 				}
 			}
 		}
@@ -70,19 +70,52 @@ func init() {
 	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func CreateUser(username string, password string) (err error) {
-	db, err := gorm.Open("mysql", dsn)
-	fmt.Println(dsn)
-	defer db.Close()
+// Database Connect
+var DB *gorm.DB
+
+type DBConfig struct {
+	Host 		string
+	User		string
+	DBName		string
+	Password	string
+}
+
+func BuildDBConfig() *DBConfig {
+	dbConfig := DBConfig{
+		Host: "tcp(db)",
+		User: os.Getenv("MYSQL_USER"),
+		Password: os.Getenv("MYSQL_PASSWORD"),
+		DBName: os.Getenv("MYSQL_DATABASE"),
+	}
+	return &dbConfig
+}
+
+func DBUul(dbConfig *DBConfig) string {
+	return fmt.Sprintf("%s:%s@%s/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		dbConfig.User,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.DBName,
+	)
+}
+
+func DBConnect() *gorm.DB {
+	db, err := gorm.Open("mysql", DBUul(BuildDBConfig()))
 	if err != nil {
-		fmt.Println("Database Close")
 		panic(err)
 	}
+	return db
+}
+
+func CreateUser(username string, password string) (err error) {
+	db := DBConnect()
+	defer db.Close()
 	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err := db.Create(&User{Username: username, Password: string(hash)}).Error; err != nil {
-		fmt.Println("エラーです。")
 		return err
 	}
-	fmt.Println("処理が成功しました。")
 	return nil
 }
+
+
+
