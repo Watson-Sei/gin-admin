@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
@@ -24,13 +25,13 @@ import (
 )
 
 type User struct {
-	ID			uint
-	Username	string
-	Password	string
+	ID       uint
+	Username string
+	Password string
 }
 
 func (b *User) TableName() string {
-	return "users"
+	return "user"
 }
 
 // createCmd represents the create command
@@ -77,18 +78,18 @@ func init() {
 var DB *gorm.DB
 
 type DBConfig struct {
-	Host 		string
-	User		string
-	DBName		string
-	Password	string
+	Host     string
+	User     string
+	DBName   string
+	Password string
 }
 
 func BuildDBConfig() *DBConfig {
 	dbConfig := DBConfig{
-		Host: "tcp(db)",
-		User: "docker_user",
+		Host:     "tcp(db)",
+		User:     "docker_user",
 		Password: "docker_pass",
-		DBName: "watson-db",
+		DBName:   "watson-db",
 	}
 	return &dbConfig
 }
@@ -119,6 +120,3 @@ func CreateUser(username string, password string) (err error) {
 	}
 	return nil
 }
-
-
-
