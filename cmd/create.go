@@ -17,11 +17,20 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
-	"github.com/Watson-Sei/gin-admin/models"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
+	"golang.org/x/crypto/bcrypt"
+	"os"
 )
+
+type User struct {
+	ID			uint
+	Username	string
+	Password	string
+}
+
+var dsn = fmt.Sprintf("%s:%s@%s/%s", os.Getenv("MYSQL_USER"),os.Getenv("MYSQL_PASSWORD"),os.Getenv("HOST"),os.Getenv("MYSQL_DATABASE"))
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -36,9 +45,8 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if name, err := cmd.PersistentFlags().GetString("name"); err == nil {
 			if password, err := cmd.PersistentFlags().GetString("password"); err == nil {
-				if err := models.CreateUser(name, password); err != nil {
-					fmt.Println("good job")
-					fmt.Println(os.Getenv("MYSQL_USER"),os.Getenv("MYSQL_PASSWORD"))
+				if err := CreateUser(name, password); err != nil {
+					fmt.Println("Good Job")
 				} else {
 					fmt.Println(err)
 				}
@@ -61,4 +69,18 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func CreateUser(username string, password string) (err error) {
+	db, err := gorm.Open("mysql", dsn)
+	defer db.Close()
+	if err != nil {
+		fmt.Println("Database Close")
+		panic(err)
+	}
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err := db.Create(&User{Username: username, Password: string(hash)}).Error; err != nil {
+		return err
+	}
+	return nil
 }
