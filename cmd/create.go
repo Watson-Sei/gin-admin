@@ -82,5 +82,6 @@ func CreateUser(username string, password string) (err error) {
 	if err := db.Create(&User{Username: username, Password: string(hash)}).Error; err != nil {
 		return err
 	}
+	fmt.Println("処理が成功しました。")
 	return nil
 }
