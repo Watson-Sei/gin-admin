@@ -21,7 +21,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
-	"os"
 )
 
 type User struct {
@@ -83,9 +82,9 @@ type DBConfig struct {
 func BuildDBConfig() *DBConfig {
 	dbConfig := DBConfig{
 		Host: "tcp(db)",
-		User: os.Getenv("MYSQL_USER"),
-		Password: os.Getenv("MYSQL_PASSWORD"),
-		DBName: os.Getenv("MYSQL_DATABASE"),
+		User: "docker_user",
+		Password: "docker_pass",
+		DBName: "watson-db",
 	}
 	return &dbConfig
 }
