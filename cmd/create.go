@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -51,7 +52,7 @@ to quickly create a Cobra application.`,
 				if err != nil {
 					fmt.Println(err)
 				} else {
-					fmt.Println("Good Succes")
+					fmt.Println("Good Success")
 				}
 			}
 		}
@@ -86,10 +87,10 @@ type DBConfig struct {
 
 func BuildDBConfig() *DBConfig {
 	dbConfig := DBConfig{
-		Host:     "tcp(db)",
-		User:     "docker_user",
-		Password: "docker_pass",
-		DBName:   "watson-db",
+		Host:     os.Getenv("HOST"),
+		User:     os.Getenv("MYSQL_USER"),
+		Password: os.Getenv("MYSQL_PASSWORD"),
+		DBName:   os.Getenv("MYSQL_DATABASE"),
 	}
 	return &dbConfig
 }
