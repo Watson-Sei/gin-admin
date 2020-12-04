@@ -1,6 +1,11 @@
 # gin-admin
 django-adminのパクリ
 
+# install
+```
+go get -u github.com/Watson-Sei/gin-admin
+```
+
 
 ```
 HOST=tcp(db)
